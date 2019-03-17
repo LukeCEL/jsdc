@@ -24,7 +24,7 @@ To use this file, you need a copy of stars.txt. You can create it using my build
 
 You also need a data file in CSV format from CDS' XMATCH tool, which should be named "diameters.csv". To do that, go to the [XMATCH interface](http://cdsxmatch.u-strasbg.fr). Type in `II/346/jsdc_v2` for the first table, and `I/239/hip_main` for the second table.
 
-Then, click on the "Show options" button. You can modify the cross-match criteria. For this, I've chosen to cross-match by position, and set the limiting radius as 2 arcsec. Finally, click on the button that says "Begin the X-Match". Where it says "Get result", click on "Download as CSV". Rename the file as "diameter.csv".
+Then, click on the "Show options" button. You can modify the cross-match criteria. For this, I've chosen to cross-match by position, and set the limiting radius as 2 arcsec. Finally, click on the button that says "Begin the X-Match". Where it says "Get result", click on "Download as CSV". Rename the file as "diameters.csv".
 
 ## Acknowledgements
 Thanks to Chris Laurel and everyone who helped create Celestia in the first place. Also, a huge thanks to Andrew Tribick (ajtribick) for creating the original buildstardb.pl file.
