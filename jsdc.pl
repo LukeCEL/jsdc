@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# buildradii.pl
+# jsdc.pl
 #
 # Builds jsdc.stc file for Celestia
 #
