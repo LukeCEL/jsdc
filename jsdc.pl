@@ -4,7 +4,7 @@
 #
 # Builds jsdc.stc file for Celestia
 #
-# Version 2.0 - LukeCEL (2018-12-22)
+# Version 2.1 - LukeCEL (2020-02-23)
 
 use Math::Trig;
 use strict;
@@ -20,6 +20,9 @@ my $LY_TO_KM = 9460730472580.8;
 
 # data stored in these arrays
 my %stars = (); # star details
+
+# set to 1 if jsdc.pl is extracting from a stars.txt with spherical (RA/Dec/Dist) coordinates
+my $USE_SPHERICAL = 0;
 
 ReadRadii();
 ReadStars();
@@ -94,10 +97,16 @@ sub ReadStars
 
 		my $HIP = $fields[0];
 
-		if (exists $stars{$HIP})
-		{
-			# add values into entry
-			$stars{$HIP}{'Dist'} = $fields[3];
+		if ($USE_SPHERICAL == 1) {
+			if (exists $stars{$HIP}) {
+				# add values into entry: here the distance is the fourth row
+				$stars{$HIP}{'Dist'} = $fields[3];
+			}
+		} else {
+			if (exists $stars{$HIP}) {
+				# add values into entry: here the distance has to be calculated from x, y, z
+				$stars{$HIP}{'Dist'} = sqrt(($fields[1])**2 + ($fields[2])**2 + ($fields[3])**2);
+			}
 		}
 
 		# increment tally
