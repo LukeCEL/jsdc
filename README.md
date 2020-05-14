@@ -29,4 +29,7 @@ Then, click on the "Show options" button. You can modify the cross-match criteri
 If the stars.txt you are using has spherical coordinates (i.e. RA, Dec, and distances in ly), then set the variable `my $USE_SPHERICAL` to 1. If the stars.txt uses x, y, and z values in ly (the default for the startextdump program), set the variable `my $USE_SPHERICAL` to 0.
 
 ## Acknowledgements
+This has made use of the Jean-Marie Mariotti Center JSDC catalogue, available at http://www.jmmc.fr/catalogue_jsdc.htm, as well as the cross-match service provided by CDS, Strasbourg.
+
 Thanks to Chris Laurel and everyone who helped create Celestia in the first place. Also, a huge thanks to Andrew Tribick (ajtribick) for creating the original buildstardb.pl file.
+
