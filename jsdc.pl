@@ -23,6 +23,7 @@ my %stars = (); # star details
 
 # set to 1 if jsdc.pl is extracting from a stars.txt with spherical (RA/Dec/Dist) coordinates
 my $USE_SPHERICAL = 0;
+$USE_SPHERICAL = 1 if ($ARGV[0] eq '-s' || $ARGV[0] eq '--spherical');
 
 ReadRadii();
 ReadStars();

@@ -26,7 +26,7 @@ You also need a data file in CSV format from CDS' XMATCH tool, which should be n
 
 Then, click on the "Show options" button. You can modify the cross-match criteria. For this, I've chosen to cross-match by position, and set the limiting radius as 2 arcsec. Finally, click on the button that says "Begin the X-Match". Where it says "Get result", click on "Download as CSV". Rename the file as "diameters.csv".
 
-If the stars.txt you are using has spherical coordinates (i.e. RA, Dec, and distances in ly), then set the variable `my $USE_SPHERICAL` to 1. If the stars.txt uses x, y, and z values in ly (the default for the startextdump program), set the variable `my $USE_SPHERICAL` to 0.
+If the stars.txt you are using has spherical coordinates (i.e. RA, Dec, and distances in ly), then use the command-line argument `-s` or `--spherical`.
 
 ## Acknowledgements
 This has made use of the Jean-Marie Mariotti Center JSDC catalogue, available at http://www.jmmc.fr/catalogue_jsdc.htm, as well as the cross-match service provided by CDS, Strasbourg.
