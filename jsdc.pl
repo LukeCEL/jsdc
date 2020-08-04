@@ -11,7 +11,7 @@ use strict;
 
 # default file paths
 my $JSDC_PATH  = 'diameters.csv';
-my $STARS_PATH = 'stars.txt';
+my $STARS_PATH = 'stars.dat';
 my $TXT_PATH  = 'jsdc.stc';
 
 # conversion constants
@@ -20,10 +20,6 @@ my $LY_TO_KM = 9460730472580.8;
 
 # data stored in these arrays
 my %stars = (); # star details
-
-# set to 1 if jsdc.pl is extracting from a stars.txt with spherical (RA/Dec/Dist) coordinates
-my $USE_SPHERICAL = 0;
-$USE_SPHERICAL = 1 if ($ARGV[0] eq '-s' || $ARGV[0] eq '--spherical');
 
 ReadRadii();
 ReadStars();
@@ -78,42 +74,27 @@ sub ReadRadii
 
 sub ReadStars
 {
-	print "Reading buildstardb.pl output...\n";
+	print "Reading stars.dat file...\n";
 
-	local(*STARSFILE);
-	if(!open(STARSFILE, '<', $STARS_PATH))
-	{
-		print "  ERROR: Could not open $STARS_PATH\n";
-		return;
-	}
-
-	my $numStars = 0;
-	while (my $curLine = <STARSFILE>) # && index($curLine, " ") != -1 
-	{
-		next if $. < 2;
-		chomp $curLine;
-
-		# split into separate fields using spaces
-		my @fields = split(' ', $curLine);
-
-		my $HIP = $fields[0];
-
-		if ($USE_SPHERICAL == 1) {
-			if (exists $stars{$HIP}) {
-				# add values into entry: here the distance is the fourth row
-				$stars{$HIP}{'Dist'} = $fields[3];
-			}
-		} else {
-			if (exists $stars{$HIP}) {
-				# add values into entry: here the distance has to be calculated from x, y, z
-				$stars{$HIP}{'Dist'} = sqrt(($fields[1])**2 + ($fields[2])**2 + ($fields[3])**2);
-			}
-		}
-
-		# increment tally
-		$numStars++;
-	}
-	close(STARSFILE);
+    open STARS, '<', $STARS_PATH or die "Cannot open stars.dat for reading.\n";
+    binmode STARS;
+    
+    # read file header: test whether this is a star database and get number of stars
+    read(STARS, my $buf, 14);
+    
+    my ($fileType, $version, $numStars) = unpack('A8SL', $buf);
+    
+    die "Bad stars.dat format" if(($fileType ne 'CELSTARS') || ($version != 0x0100));
+    
+    for (my $i = 0; $i < $numStars; $i++) {
+        read(STARS, $buf, 20);
+        my ($HIP, $x, $y, $z) = unpack('Lfffx4', $buf); # don't need magnitude or spectral type
+        if(exists $stars{$HIP}) {
+            $stars{$HIP}{'Dist'} = sqrt($x * $x + $y * $y + $z * $z);
+        }
+    }
+    
+    close(STARSFILE);
 	
 	print "  Read a total of $numStars records.\n";
 }
@@ -140,8 +121,8 @@ sub WriteStc
 	print TXTFILE "# calculated from angular diameters and distances. Limb-darkened disk\n";
 	print TXTFILE "# diameters were taken from the JMMC Stellar Diameters Catalogue (JSDC v2.0)\n";
 	print TXTFILE "# and cross-matched with the Hipparcos Catalogue using the CDS XMATCH tool.\n";
-	print TXTFILE "# Distances were taken from the stars.txt file that was outputted from the\n";
-	print TXTFILE "# buildstardb.pl file. Only diameters where the error is less than 3% of the\n";
+	print TXTFILE "# Distances were read from Celestia's binary-format star database\n";
+	print TXTFILE "# (stars.dat). Only diameters where the error is less than 3% of the\n";
 	print TXTFILE "# value itself are used.\n\n";
 	
 	# write each star
